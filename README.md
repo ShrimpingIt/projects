@@ -28,4 +28,4 @@ After unzipping the sketchbook folder to your preferred location on your compute
 
 ## Issues, Bugs, Requests
 
-We invite those experimenting with our projects to report any issues they find, by clicking on the 'Issues' link on the right hand side of this page. This means we can improve the experience for future learners.
+We invite those experimenting with our projects to [report any issues they find](https://github.com/ShrimpingIt/projects/issues). This means we can improve the experience for future learners.
