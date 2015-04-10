@@ -16,9 +16,9 @@ To upload code to a @ShrimpingIt project, you must **first install the Arduino I
 
 **UART drivers should be installed** so the USB device you use for programming can be identified by your computer. (drivers for our CP2102-based USB UARTs are [here](http://shrimping.it/drivers/) ).
 
-Download this repository by clicking on Github's Download Zip' link on the right of this page.
+Download this repository as a zip by clicking [here](https://github.com/ShrimpingIt/projects/archive/master.zip)
 
-After unzipping the sketchbook folder to your preferred location on your computer, launch the Arduino IDE and change your sketchbook location in *File=>Preferences* to point to the folder. If you already have a Sketchbook folder with sketches you want to keep, then drag the 'sketchbook/shrimpingit' folder into your sketchbook, and also drag the folders inside 'sketchbook/library/' into your own sketchbook's 'library' folder.
+After unzipping the 'sketchbook' folder to your preferred location on your computer, launch the Arduino IDE and change your sketchbook location in *File=>Preferences* to point to the folder. If you already have a Sketchbook folder with sketches you want to keep, then drag the 'sketchbook/shrimpingit' folder into your sketchbook, and also drag the folders inside 'sketchbook/library/' into your own sketchbook's 'library' folder.
 
 ## Licensing
 
