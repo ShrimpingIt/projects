@@ -4,7 +4,7 @@ This is a collection of resources including vector graphics and software sketche
 
 ## Sketchbook 
 
-The **'sketchbook'** folder contains software, known by the Arduino community as 'sketches' intended to be uploaded to the circuits when they are complete. 
+The **'sketchbook'** folder contains software, known by the Arduino community as 'sketches' intended to be uploaded to the circuits when they are complete. The libraries required by our projects are distributed within the same sketchbook folder for your convenience. Thanks to all the library authors! We couldn't do it without you.
 
 ## Vector Graphics
 
