@@ -1,6 +1,12 @@
 # @ShrimpingIt Project Resources
 
-This is a collection of resources supporting the adopters of projects developed by [@ShrimpingIt](http://shrimping.it). The repository includes vector graphics, software sketches and other resources.
+This is a collection of resources including vector graphics and software sketches supporting the adopters of projects developed by [@ShrimpingIt](http://shrimping.it).
+
+These resources are shared under a Creative Commons, Attribution, Non-Commercial, Share-Alike license, also known as [CC-BY-NC-SA](https://creativecommons.org/licenses/by-nc-sa/3.0/). 
+
+Roughly this means if... 
+* you're an educator or learner, or you're distributing kits to others at cost, knock yourself out (crediting @ShrimpingIt and allowing others to remix your work). 
+* you're a company selling kits for profit and you want to include the resources we've designed and shared to improve your customers' experience, then [get in touch](http://shrimping.it).
 
 ## Sketchbook 
 
