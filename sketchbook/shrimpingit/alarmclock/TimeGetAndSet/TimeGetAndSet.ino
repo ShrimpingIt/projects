@@ -4,43 +4,18 @@
 
 RTC_DS1307 rtc;
 
-/*
-char dayNames[][]={
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday"
-};
-
-char monthNames[][]={
-    "January",
-    "February",
-    "March",
-    "April",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December"
-};
-*/
-
 #define COMMANDMAX 19
-
 String command = "";
 String field = "";
-
 int fieldStart = 0;
 
 void setup(){
-  Serial.begin(57600);
+  //start all utility libraries
+  Serial.begin(9600);
   Wire.begin();
   rtc.begin();
+
+  //reserve enough string memory for ISO8601 date string like 2015-06-01T12:00:00
   command.reserve(COMMANDMAX + 1); 
   field.reserve(COMMANDMAX + 1);
 }
@@ -53,6 +28,7 @@ void loop(){
     }
     else{
       processCommand();
+      command.remove(0);
     }
   }
 }
@@ -93,16 +69,17 @@ void processCommand(){
   //always print out the date and time (sending just newline reports time)
   printTime();
 
-  command = "";
+  command.remove(0);
 
 }
 
 int nextIntField(char terminator){
   int fieldEnd = command.indexOf(terminator, fieldStart);
   if(fieldEnd != -1){
-    field = command.substring(fieldStart,fieldEnd);
+    field += command.substring(fieldStart,fieldEnd);
     fieldStart = fieldEnd + 1;
     int value = field.toInt();
+    field.remove(0);
     return value;
   }
   else{
@@ -111,8 +88,9 @@ int nextIntField(char terminator){
 }
 
 int remainingIntField(){
-  field = command.substring(fieldStart);
+  field += command.substring(fieldStart);
   int value = field.toInt();
+  field.remove(0);
   return value;
 }
 
