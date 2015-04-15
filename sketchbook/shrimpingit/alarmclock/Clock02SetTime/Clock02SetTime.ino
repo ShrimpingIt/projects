@@ -15,6 +15,34 @@ String command = "";
 String field = "";
 int fieldStart = 0;
 
+char* dayName[]={
+  "Sunday",  
+  "Monday",  
+  "Tuesday",  
+  "Wednesday",  
+  "Thursday",  
+  "Friday",  
+  "Saturday",  
+  "Sunday",  
+};
+
+char* monthName[]={
+  "",  
+  "January",  
+  "February",  
+  "March",  
+  "April",  
+  "May",  
+  "June",  
+  "July",  
+  "August",  
+  "September",
+  "October",  
+  "November",  
+  "December",
+};
+
+
 void setup(){
   Serial.begin(SERIAL_RATE);
   Wire.begin();
@@ -61,7 +89,7 @@ void setTime(uint8_t  hour, uint8_t  minute, uint8_t  second){ //changes only th
   setDateTime(now.year(), now.month(), now.day(), hour, minute, second);
 }
 
-void printTime(){
+void printDateTimeIso(){
     DateTime now = rtc.now();    
     Serial.print(now.year(), DEC);
     Serial.print('-');
@@ -75,6 +103,41 @@ void printTime(){
     Serial.print(':');
     Serial.print(now.second(), DEC);
     Serial.println();
+}
+
+void printDateTimeVerbose(){
+    DateTime now = rtc.now();
+
+    Serial.print("It's ");
+    
+    Serial.print(now.hour() % 12 == 0 ? 12 : now.hour() % 12, DEC);
+    Serial.print(" ");
+    Serial.print(now.minute(), DEC);
+    Serial.print(now.hour() != (now.hour() % 12) ? " pm ": " am ");
+    
+    Serial.print(" on ");
+    
+    Serial.print(dayName[now.dayOfWeek()]);
+    Serial.print(" the ");
+    Serial.print(now.day(), DEC);
+    Serial.print(ordinalSuffix(now.day()));
+    Serial.print(" of ");
+    Serial.print(monthName[now.month()]);
+    Serial.print(", ");
+    Serial.print(now.year(), DEC);
+
+    Serial.println();
+}
+
+char* ordinalSuffix(int number){
+  if(number < 4 || number > 20){
+    switch(number%10){
+      case 1: return "st";
+      case 2: return "nd";
+      case 3: return "rd";
+    }
+  }
+  return "th";
 }
 
 void processCommand(){
@@ -114,7 +177,7 @@ void processCommand(){
   }
   
   if(newDateTime){
-    printTime();
+    printDateTimeVerbose();
   }
   else if(command.length() > 0){
     Serial.print("Could not understand: ");
