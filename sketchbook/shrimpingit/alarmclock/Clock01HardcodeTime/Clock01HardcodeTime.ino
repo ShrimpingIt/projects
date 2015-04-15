@@ -1,24 +1,28 @@
 #include <Wire.h>
 #include "RTClib.h"
-#include <Narcoleptic.h>
 
 RTC_DS1307 rtc;
 
 void setup(){
   Serial.begin(9600);
-
   Wire.begin();
   rtc.begin();
   
-  rtc.adjust(DateTime(2015, 4, 13, 10, 30, 0));  
-  printTime();
-
+  if(!rtc.isRunning()){ 
+    //if time never set since powering RTC chip
+    //then set it to a hard-coded time
+    rtc.adjust(DateTime(2015, 4, 13, 10, 30, 0));  
+  }
+  
 }
 
 void loop(){
+  delay(1000);
+  printTime();
 }
 
-void printTime(){
+/** Prints a dateTime conforming to ISO8601. */ 
+void printIsoDateTime(){
     DateTime now = rtc.now();    
     Serial.print(now.year(), DEC);
     Serial.print('-');
