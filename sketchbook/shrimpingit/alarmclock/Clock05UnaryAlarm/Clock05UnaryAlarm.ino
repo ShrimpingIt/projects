@@ -4,7 +4,10 @@
 
 RTC_DS1307 rtc;
 
+#define NUM_REGISTER_BYTES 4
+
 #define COMMANDMAX 19
+
 String command = "";
 String field = "";
 int fieldStart = 0;
@@ -15,9 +18,10 @@ const char song_P[] PROGMEM = "Wham- Wake Me Up:d=4,o=5,b=300:f#5,2a5,2b5.,p,f#5
 
 ProgmemPlayer player(9);
 
-boolean lit[36];
-const int clockPin = A3;
-const int dataPin = A2;
+byte registerBytes[NUM_REGISTER_BYTES];
+const int latchPin = A1;
+const int clockPin = A2;
+const int dataPin = A3;
 
 //Each of these binary sequences should have 
 //an easily distinguishable number of LED lights
@@ -43,18 +47,16 @@ int distinctNumbers[] = {
 //negative number from -1 to -12 is a minutes indicator light
 //zero means do not use
 int assignments[] ={
-    1,  2, 0,  3, 0,  4, 0,  5,  6,
-   -6, -5, 0, -4, 0, -3, 0, -2, -1,
-  -12,-11, 0,-10, 0, -9, 0, -8, -7,
-    7,  8, 0,  9, 0, 10, 0, 11, 12
+    1,  2, 0,  3, 4, 0,  5,  6,
+   -6, -5, 0, -4, -3, 0, -2, -1,
+  -12,-11, 0,-10, -9, 0, -8, -7,
+    7,  8, 0,  9, 10, 0, 11, 12
 };
 
 int brightness = 255;
 
 int alarmHour = 7;
 int alarmMinute = 00;
-
-boolean report = false;
 
 void setup(){
   //start all utility libraries
@@ -139,7 +141,7 @@ void processCommand(){
   printTime();
 
   command.remove(0);
-
+  
 }
 
 int nextIntField(char terminator){
@@ -197,8 +199,6 @@ void printTime(){
     Serial.println();
 }
 
-
-
 void showTime(int newHours, int newMins){ 
   //calculate for display
   newHours = newHours % 12; //bounds checking
@@ -232,47 +232,54 @@ boolean centerUnaryIsLit(int numLights, int pos){
 }
 
 void shiftLights(int showHours, int showMinutes){
+
+  digitalWrite(latchPin,LOW);
     
   int showLights; //count of lights illuminated in the current bank
   int shiftPos; //the current pin which is being written to
-  
-  //go through all the pins of both shift registers
-  for(shiftPos = 0; shiftPos < 36; shiftPos++){
+  int bytePos; //the current byte being written to
+  int bitPos; //the current bit in the current byte being written to
+    
+  //go through all the pins of both DM134 chips setting high bits to light lights
+  for(shiftPos = 0; shiftPos < NUM_REGISTER_BYTES * 8; shiftPos++){
+    
+    int bytePos = shiftPos / 8;
+    int bitPos = shiftPos % 8;
     
     //figure out the assigned role of this pin 
     //value between 1 and 12 (magnitude), and if it's an hour or minute (sign)
     int assignment = assignments[shiftPos];
 
+    byte setBit = 1 << bitPos;
     if(assignment == 0){ //it's not meant to be active (has no LED in this pin)
-      lit[shiftPos] = false; //leave it off
+      //do nothing - bit is already zero
     }
     else {
       if(assignment >= 0){ //positive number indicates an hour light
         assignment = assignment - 1;  //shift to index LEDs from 0 to 11, not 1 to 12
-        lit[shiftPos] = distinctNumberIsLit(showHours, assignment); 
+        if(distinctNumberIsLit(showHours, assignment)){
+          registerBytes[bytePos] |= setBit;
+        }
       }
       else { //negative number indicates a minute light
         assignment = abs(assignment) - 1; //change sign and shift to index LEDs from 0 to 11 not 1 to 12
-        lit[shiftPos] = leftUnaryIsLit(showMinutes, assignment); 
+        if(leftUnaryIsLit(showMinutes, assignment)){
+          registerBytes[bytePos] |= setBit;
+        }
       }
     }    
         
-    shiftOut(dataPin, clockPin, MSBFIRST, lit[shiftPos] ? brightness : 0); //set current light
         
   } 
-
-  digitalWrite(clockPin, LOW);
-  delay(1);
- 
-  if(report){
-    Serial.print("arr:");
-    for(shiftPos = 0; shiftPos < 36; shiftPos++){
-      Serial.print(lit[shiftPos]?"1":"0");
-    }
-    Serial.println();
-    Serial.flush();
+  
+  for(bytePos = 0; bytePos < NUM_REGISTER_BYTES; bytePos++){
+    shiftOut(dataPin, clockPin, LSBFIRST, registerBytes[bytePos]);
+    registerBytes[bytePos] = 0; //reset to blank for next time round
   }
 
+  digitalWrite(latchPin,HIGH);
+  delay(1);
+  digitalWrite(latchPin, LOW);
 
 }
  
