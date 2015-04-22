@@ -3,8 +3,10 @@
 
 RTC_DS1307 rtc;
 
+#define SERIAL_RATE 9600
+
 void setup(){
-  Serial.begin(9600);
+  Serial.begin(SERIAL_RATE);
   Wire.begin();
   rtc.begin();
   
