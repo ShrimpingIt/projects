@@ -52,7 +52,7 @@ void setup(){
   command.reserve(COMMANDMAX + 1); 
   field.reserve(COMMANDMAX + 1);
   
-  printTime();
+  printDateTimeVerbose();
 }
 
 void loop(){

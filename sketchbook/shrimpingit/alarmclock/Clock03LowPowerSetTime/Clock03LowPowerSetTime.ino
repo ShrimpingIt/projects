@@ -5,9 +5,9 @@
 
 RTC_DS1307 rtc;
 
-#define SERIAL_RECEIVE_PIN 0
 #define SERIAL_RATE 9600
 
+#define SERIAL_RECEIVE_PIN 0
 #define SERIAL_IDLE_PERIOD 30000
 #define SLEEP_UNIT 60000
 
@@ -58,7 +58,7 @@ void setup(){
   command.reserve(COMMANDMAX + 1); 
   field.reserve(COMMANDMAX + 1);
   
-  printTime();
+  printDateTimeVerbose();
 }
 
 void loop(){

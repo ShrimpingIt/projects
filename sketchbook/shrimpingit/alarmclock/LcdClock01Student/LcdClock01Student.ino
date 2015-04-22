@@ -60,7 +60,7 @@ char* monthName[]={
 unsigned long lastSerialActivity;
 volatile boolean sleptPeacefully;
 
-boolean diurnalDemo = true;
+boolean fastForwardDemo = false;
 
 void setup(){
   Serial.begin(SERIAL_RATE);
@@ -95,7 +95,7 @@ void loop(){
     }
   }
   
-  if(lowPowerDue() && !diurnalDemo){
+  if(lowPowerDue() && !fastForwardDemo){
     Serial.print("\nNo commands since ");
     Serial.print(SERIAL_IDLE_PERIOD);
     Serial.println(" ms");
@@ -120,7 +120,8 @@ void loop(){
 }
 
 void timeUpdated(){
-  if(diurnalDemo){
+  
+  if(fastForwardDemo){
     timeTravel(750);
     delay(10);
   }

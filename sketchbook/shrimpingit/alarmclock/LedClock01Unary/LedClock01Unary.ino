@@ -4,6 +4,8 @@
 
 RTC_DS1307 rtc;
 
+#define SERIAL_RATE 9600
+
 #define NUM_REGISTER_BYTES 4
 
 #define COMMANDMAX 19
@@ -16,7 +18,35 @@ int fieldStart = 0;
 //or look online for your favourite chimes, being careful to remove unnecessary spaces
 const char song_P[] PROGMEM = "Wham- Wake Me Up:d=4,o=5,b=300:f#5,2a5,2b5.,p,f#5,2a5,b5,2f#5,2d5,p,d5,e5,2f#5,2g5,f#5,e5,d5,2f#5,a5,2f#5,d5,2p";
 
-ProgmemPlayer player(9);
+ProgmemPlayer player(6);
+
+char* dayName[]={
+  "Sunday",  
+  "Monday",  
+  "Tuesday",  
+  "Wednesday",  
+  "Thursday",  
+  "Friday",  
+  "Saturday",  
+  "Sunday",  
+};
+
+char* monthName[]={
+  "",  
+  "January",  
+  "February",  
+  "March",  
+  "April",  
+  "May",  
+  "June",  
+  "July",  
+  "August",  
+  "September",
+  "October",  
+  "November",  
+  "December",
+};
+
 
 byte registerBytes[NUM_REGISTER_BYTES];
 const int latchPin = A1;
@@ -32,7 +62,7 @@ int distinctNumbers[] = {
   0b100010001000, //3
   0b001001001001, //4
   0b011000100011, //5
-  0b101010101010, //6
+  0b000000111111, //6
   0b100000111111, //7
   0b011011011011, //8
   0b011101110111, //9
@@ -55,12 +85,11 @@ int assignments[] ={
 
 int brightness = 255;
 
-int alarmHour = 7;
-int alarmMinute = 00;
+int alarmHour = 9;
+int alarmMinute = 35;
 
 void setup(){
-  //start all utility libraries
-  Serial.begin(9600);
+  Serial.begin(SERIAL_RATE);
   Wire.begin();
   rtc.begin();
 
@@ -73,8 +102,11 @@ void setup(){
  
   player.setSong(song_P);
   
-  if (! rtc.isrunning()) {
-    Serial.println("RTC is NOT running!");
+  if (rtc.isrunning()) {
+    printDateTimeVerbose();
+  }
+  else{
+    Serial.println("Realtime Clock has not yet been set!");
   }  
   
 }
@@ -97,16 +129,88 @@ void loop(){
   showTime(now.hour(), now.minute());
   
   //tune is re-triggered throughout the alarm minute
-  while(now.hour() == alarmHour && now.minute() == alarmMinute){ 
+  while(now.hour() == alarmHour && now.minute() == alarmMinute){
+    Serial.print("Playing Alarm Melody at ");
+    printDateTimeVerbose();
     player.finishSong();
     now = rtc.now();
   }
     
 }
 
+/** Sets both the date and the time */
+void setDateTime(  uint16_t year, uint8_t  month, uint8_t  day, uint8_t  hour, uint8_t  minute, uint8_t  second){
+  rtc.adjust(DateTime(year, month, day, hour, minute, second));
+}
+
+/** Sets only the date */
+void setDate(  uint16_t year, uint8_t  month, uint8_t  day){ //changes only the date
+  DateTime now = rtc.now();
+  setDateTime(year, month, day, now.hour(), now.minute(), now.second());
+}
+
+/** Sets only the time */
+void setTime(uint8_t  hour, uint8_t  minute, uint8_t  second){ //changes only the time
+  DateTime now = rtc.now();
+  setDateTime(now.year(), now.month(), now.day(), hour, minute, second);
+}
+
+
+void printDateTimeIso(){
+    DateTime now = rtc.now();    
+    Serial.print(now.year(), DEC);
+    Serial.print('-');
+    Serial.print(now.month(), DEC);
+    Serial.print('-');
+    Serial.print(now.day(), DEC);
+    Serial.print('T');
+    Serial.print(now.hour(), DEC);
+    Serial.print(':');
+    Serial.print(now.minute(), DEC);
+    Serial.print(':');
+    Serial.print(now.second(), DEC);
+    Serial.println();
+}
+
+void printDateTimeVerbose(){
+    DateTime now = rtc.now();
+
+    Serial.print("It's ");
+    
+    Serial.print(now.hour() % 12 == 0 ? 12 : now.hour() % 12, DEC);
+    Serial.print(" ");
+    Serial.print(now.minute(), DEC);
+    Serial.print(now.hour() != (now.hour() % 12) ? " pm ": " am ");
+    
+    Serial.print(" on ");
+    
+    Serial.print(dayName[now.dayOfWeek()]);
+    Serial.print(" the ");
+    Serial.print(now.day(), DEC);
+    Serial.print(ordinalSuffix(now.day()));
+    Serial.print(" of ");
+    Serial.print(monthName[now.month()]);
+    Serial.print(", ");
+    Serial.print(now.year(), DEC);
+
+    Serial.println();
+}
+
+char* ordinalSuffix(int number){
+  if(number < 4 || number > 20){
+    switch(number%10){
+      case 1: return "st";
+      case 2: return "nd";
+      case 3: return "rd";
+    }
+  }
+  return "th";
+}
+
 void processCommand(){
   
   int year,month,day,hour,minute,second;
+  boolean newDateTime = false;
      
   fieldStart = 0;
   
@@ -120,6 +224,7 @@ void processCommand(){
       day = remainingIntField();
     }      
     setDate(year, month, day);
+    newDateTime = true;
   }
 
   //try to parse an ISO 8601 time fragment
@@ -135,11 +240,17 @@ void processCommand(){
       second = remainingIntField();      
     }
     setTime(hour, minute, second);
+    newDateTime = true;
   }
   
-  //always print out the date and time (sending just newline reports time)
-  printTime();
-
+  if(newDateTime){
+    printDateTimeVerbose();
+  }
+  else if(command.length() > 0){
+    Serial.print("Could not understand: ");
+    Serial.println(command);
+  }
+  
   command.remove(0);
   
 }
@@ -166,38 +277,6 @@ int remainingIntField(){
 }
 
 
-/** Sets both the date and the time */
-void setDateTime(  uint16_t year, uint8_t  month, uint8_t  day, uint8_t  hour, uint8_t  minute, uint8_t  second){
-  rtc.adjust(DateTime(year, month, day, hour, minute, second));
-}
-
-/** Sets only the date */
-void setDate(  uint16_t year, uint8_t  month, uint8_t  day){ //changes only the date
-  DateTime now = rtc.now();
-  setDateTime(year, month, day, now.hour(), now.minute(), now.second());
-}
-
-/** Sets only the time */
-void setTime(uint8_t  hour, uint8_t  minute, uint8_t  second){ //changes only the time
-  DateTime now = rtc.now();
-  setDateTime(now.year(), now.month(), now.day(), hour, minute, second);
-}
-
-void printTime(){
-    DateTime now = rtc.now();    
-    Serial.print(now.year(), DEC);
-    Serial.print('-');
-    Serial.print(now.month(), DEC);
-    Serial.print('-');
-    Serial.print(now.day(), DEC);
-    Serial.print('T');
-    Serial.print(now.hour(), DEC);
-    Serial.print(':');
-    Serial.print(now.minute(), DEC);
-    Serial.print(':');
-    Serial.print(now.second(), DEC);
-    Serial.println();
-}
 
 void showTime(int newHours, int newMins){ 
   //calculate for display

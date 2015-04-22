@@ -8,7 +8,7 @@ void setup(){
   Wire.begin();
   rtc.begin();
   
-  if(!rtc.isRunning()){ 
+  if(!rtc.isrunning()){ 
     //if time never set since powering RTC chip
     //then set it to a hard-coded time
     rtc.adjust(DateTime(2015, 4, 13, 10, 30, 0));  
@@ -18,7 +18,7 @@ void setup(){
 
 void loop(){
   delay(1000);
-  printTime();
+  printIsoDateTime();
 }
 
 /** Prints a dateTime conforming to ISO8601. */ 
