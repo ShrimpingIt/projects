@@ -77,10 +77,10 @@ int distinctNumbers[] = {
 //negative number from -1 to -12 is a minutes indicator light
 //zero means do not use
 int assignments[] ={
-    1,  2, 0,  3, 4, 0,  5,  6,
-   -6, -5, 0, -4, -3, 0, -2, -1,
-  -12,-11, 0,-10, -9, 0, -8, -7,
-    7,  8, 0,  9, 10, 0, 11, 12
+   -7, -8, 0, -9,-10, 0,-11,-12,
+    1,  2, 0,  3,  4, 0,  5,  6,
+   -1, -2, 0, -3, -4, 0, -5, -6,
+   7,  8, 0,  9, 10, 0, 11, 12
 };
 
 int brightness = 255;
