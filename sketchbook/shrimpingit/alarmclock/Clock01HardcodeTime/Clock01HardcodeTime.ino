@@ -10,10 +10,11 @@ void setup(){
   Wire.begin();
   rtc.begin();
   
-  if(!rtc.isrunning()){ 
-    //if time never set since powering RTC chip
-    //then set it to a hard-coded time
-    rtc.adjust(DateTime(2015, 4, 13, 10, 30, 0));  
+  DateTime now = rtc.now();
+  if(!rtc.isrunning() || now.year() == 2099){ 
+    //time never set since powering RTC chip
+    //set it to a hard-coded time
+    rtc.adjust(DateTime(2016, 3, 21, 01, 24, 0));  
   }
   
 }

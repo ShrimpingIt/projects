@@ -119,7 +119,7 @@ void loop(){
   while(now.hour() == alarmHour && now.minute() == alarmMinute){ 
     Serial.print("Playing Alarm Melody at ");
     printDateTimeVerbose();
-    player.finishSong();
+    player.pollSong();
     now = rtc.now();
   }
 
