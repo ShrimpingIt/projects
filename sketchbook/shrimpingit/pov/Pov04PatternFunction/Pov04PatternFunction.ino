@@ -7,7 +7,6 @@ byte empty   = 0b00000000;
 
 int pinNumbers[] = { 9,10,11,12,A1,A2,A3,A4 };
 
-int totalBits = 8;
 int bitCounter;
 int bitValue;
 
@@ -16,7 +15,7 @@ void setup() {
 
   bitCounter = 0;
   
-  while(bitCounter < totalBits){
+  while(bitCounter < 8){
     pinMode(pinNumbers[bitCounter], OUTPUT); // initialize pin as output
     bitCounter = bitCounter + 1;
   }
@@ -35,7 +34,7 @@ void setLights(byte pattern){
   bitCounter = 0;
   bitValue = 1;
   
-  while(bitCounter < totalBits){
+  while(bitCounter < 8){
     digitalWrite(pinNumbers[bitCounter], (pattern & bitValue) != 0); //turn on the LED if the 'pattern' value has that bit set  
     bitCounter = bitCounter + 1;
     bitValue = bitValue * 2;

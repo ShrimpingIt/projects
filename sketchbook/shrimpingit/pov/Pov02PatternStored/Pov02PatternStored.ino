@@ -18,10 +18,11 @@ void setup() {
   pinMode(A4, OUTPUT);     
 }
 
-// the loop routine runs over and over again forever:
+// this sequence of steps is triggered over and over again forever:
 void loop() {
 
-  //check which 'bits' are set in the byte called 'pattern'  
+  //inspect the bits in the byte 'pattern' to  
+  //turn on selected LEDs
   digitalWrite(9,    (pattern & 0b00000001) != 0);
   digitalWrite(10,   (pattern & 0b00000010) != 0); 
   digitalWrite(11,   (pattern & 0b00000100) != 0); 
@@ -32,7 +33,7 @@ void loop() {
   digitalWrite(A4,   (pattern & 0b10000000) != 0); 
   delay(1);
   
-  //then turn the LEDs off for 2 milliseconds to let them cool down
+  //turn all the LEDs off for a bit to let them cool down
   digitalWrite(9,  false);
   digitalWrite(10, false);
   digitalWrite(11, false);
