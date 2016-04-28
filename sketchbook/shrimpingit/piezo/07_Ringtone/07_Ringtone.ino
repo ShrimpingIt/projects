@@ -1,3 +1,10 @@
+/* Ringtone uses our RTTTL library to play Nokia ringtones available online.
+* Just google for e.g...
+* "Bring Me Sunshine" RTTTL
+* ...to find your own old-skool tunes, and copy-paste them in between the inverted commas of the 'ringtone' char array below.
+* Then upload to hear your tune.
+* See https://github.com/ShrimpingIt/projects/tree/master/sketchbook/shrimpingit/piezo for the other examples in this series
+*/
 #include <rtttl.h>
 
 const char ringtone[] = "PacMan:b=160:32b,32p,32b6,32p,32f#6,32p,32d#6,32p,32b6,32f#6,16p,16d#6,16p,32c6,32p,32c7,32p,32g6,32p,32e6,32p,32c7,32g6,16p,16e6,16p,32b,32p,32b6,32p,32f#6,32p,32d#6,32p,32b6,32f#6,16p,16d#6,16p,32d#6,32e6,32f6,32p,32f6,32f#6,32g6,32p,32g6,32g#6,32a6,32p,32b.6";
@@ -19,15 +26,14 @@ void setup(void)
 
 void loop(void)
 {
-  
-  Serial.println("Play has started");    
+
+  Serial.println("Play has started");
   //play the song for the first time
   player.finishSong();
 
-  Serial.println("Play has ended");    
+  Serial.println("Play has ended");
   while(true){
     //keep the thread in this loop - circuit now silent
   }
-  
-}
 
+}
