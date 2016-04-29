@@ -2,22 +2,14 @@
 #include <rtttl.h>
 
 /** 
-This is a clone of the logic of MB Games' Simon memory game
+This is a clone of the logic of MB Games' Simon memory game 
 
 It is intended to drive an example circuit developed for the @ShrimpingIt
 project, which documents how to make extremely low cost and simple
-Arduino-compatible circuits. 
+Arduino-compatible circuits. See http://start.shrimping.it/project/memory/
 
-The Simon circuit can be constructed for a total cost of less than £3 including 
-batteries. It relies on a neat trick which means LEDs can be used directly as 
-illuminated buttons, massively reducing the cost of fabrication.
-
-Things to do: add melodies for transitions between game modes.
-Introduce RTTTL reading logic so people can easily change the melodies.
-Flip common led and button ground rail for a single rail running the length of the board below the chip.
-Align spot cuts for series and symmetry 
-Remove delay() clause in setMode()
-
+A cheaper soldered version can use tactile switches on the back, and LEDs on the 
+front directly as illuminated buttons, massively reducing the cost of parts.
 */
 
 //the pins used to provide the 
