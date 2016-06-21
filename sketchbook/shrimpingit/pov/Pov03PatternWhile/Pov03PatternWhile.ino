@@ -31,17 +31,16 @@ void loop() {
     bitCounter = bitCounter + 1;
     bitValue = bitValue * 2;
   }
-  
-  delay(1);
-  
+    
   bitCounter = 0;
+  delayMicroseconds(50);
+
   
-  //then turn the LEDs off for 2 milliseconds to let them cool down
+  //turn all the LEDs off for a bit to let them cool down (too fast to see)
   while(bitCounter < 8){
     digitalWrite(pinNumbers[bitCounter], false);
     bitCounter = bitCounter + 1;
   }
-  
-  delay(2);
+  delayMicroseconds(200);
   
 }
