@@ -24,17 +24,17 @@ void setup() {
 void loop() {
 
   //turn on selected LEDs
-  digitalWrite(9,  true );
-  digitalWrite(10, false); 
-  digitalWrite(11, true ); 
-  digitalWrite(12, false); 
-  digitalWrite(A1, true ); 
-  digitalWrite(A2, false); 
-  digitalWrite(A3, true ); 
-  digitalWrite(A4, false); 
-  delay(1);
+  digitalWrite(9,  false );
+  digitalWrite(10, true); 
+  digitalWrite(11, false ); 
+  digitalWrite(12, true); 
+  digitalWrite(A1, false ); 
+  digitalWrite(A2, true); 
+  digitalWrite(A3, false ); 
+  digitalWrite(A4, true); 
+  delayMicroseconds(50);
   
-  //turn all the LEDs off for a bit to let them cool down
+  //turn all the LEDs off for a bit to let them cool down (too fast to see)
   digitalWrite(9,  false);
   digitalWrite(10, false);
   digitalWrite(11, false);
@@ -43,6 +43,6 @@ void loop() {
   digitalWrite(A2, false);
   digitalWrite(A3, false);
   digitalWrite(A4, false);
-  delay(2);
+  delayMicroseconds(200);
   
 }
