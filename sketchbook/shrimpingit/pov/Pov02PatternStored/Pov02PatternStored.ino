@@ -31,9 +31,9 @@ void loop() {
   digitalWrite(A2,   (pattern & 0b00100000) != 0); 
   digitalWrite(A3,   (pattern & 0b01000000) != 0); 
   digitalWrite(A4,   (pattern & 0b10000000) != 0); 
-  delay(1);
-  
-  //turn all the LEDs off for a bit to let them cool down
+  delayMicroseconds(50);
+
+  //turn all the LEDs off for a bit to let them cool down (too fast to see)
   digitalWrite(9,  false);
   digitalWrite(10, false);
   digitalWrite(11, false);
@@ -42,6 +42,6 @@ void loop() {
   digitalWrite(A2, false);
   digitalWrite(A3, false);
   digitalWrite(A4, false);
-  delay(2);
+  delayMicroseconds(200);
   
 }
