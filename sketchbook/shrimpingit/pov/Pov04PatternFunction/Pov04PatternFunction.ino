@@ -24,9 +24,9 @@ void setup() {
 // the loop routine runs over and over again forever:
 void loop() {
   setLights(pattern);
-  delay(1);
+  delayMicroseconds(50);
   setLights(empty);
-  delay(2);
+  delayMicroseconds(200);
 }
 
 void setLights(byte pattern){
