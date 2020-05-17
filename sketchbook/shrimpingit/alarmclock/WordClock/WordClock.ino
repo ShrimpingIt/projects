@@ -5,7 +5,7 @@
 
 RTC_DS1307 rtc;
 
-DateTime defaultTime = DateTime(2016, 5, 22, 20, 45, 01);
+DateTime defaultTime = DateTime(2016, 6, 8, 01, 06, 30);
 
 int upButtonPin   = 7;
 int downButtonPin = 8;
@@ -127,15 +127,13 @@ DateTime getTime(){
 }
 
 void showDemo(){  
-  colorWipe(strip.Color(255, 0, 0), 50); // Red
-  colorWipe(strip.Color(0, 255, 0), 50); // Green
-  colorWipe(strip.Color(0, 0, 255), 50); // Blue
-  theaterChase(strip.Color(255, 0, 0), 50); // Red
-  theaterChase(strip.Color(0, 255, 0), 50); // Green
-  theaterChase(strip.Color(0, 0, 255), 50); // Blue
-  rainbowCycle(20);
-  rainbowCycle(20);
-  theaterChaseRainbow(50);
+  colorWipe(strip.Color(255, 0, 0), 20); // Red
+  colorWipe(strip.Color(0, 255, 0), 20); // Green
+  colorWipe(strip.Color(0, 0, 255), 20); // Blue
+  theaterChase(strip.Color(255, 0, 0), 10); // Red
+  theaterChase(strip.Color(0, 255, 0), 10); // Green
+  theaterChase(strip.Color(0, 0, 255), 10); // Blue
+  rainbowCycle(2);
 }
 
 void showMorecambe(){

@@ -71,17 +71,17 @@ char* monthName[]={
 //an easily distinguishable number of LED lights
 int distinctNumbers[] = {
   0b000000000000, //0
-  0b000000100000, //1
+  0b000000000001, //1
   0b100000000001, //2
-  0b100010001000, //3
+  0b000100010001, //3
   0b001001001001, //4
   0b011000100011, //5
   0b000000111111, //6
-  0b100000111111, //7
+  0b111111000001, //7
   0b011011011011, //8
   0b011101110111, //9
   0b101111111101, //10
-  0b111111011111, //11
+  0b111110111111, //11
   0b111111111111  //12
 };
 
@@ -343,15 +343,21 @@ void randomWalkBrightness(int lightPos){
 
 void shiftLights(int showHours, int showMinutes){
 
-  int minuteWheelPos  = (millis() / 100) % 256;
-  int hourWheelPos = (minuteWheelPos + 128) % 256;
+  DateTime now = rtc.now();    
+
+  boolean nightMode = false; //now.hour() >= 19 || now.hour() < 7;
+
+  int brightness = nightMode ? 2 : 256;
+
+  int minuteWheelPos  = nightMode? 48: (millis() / 200) % 256;
+  int hourWheelPos = nightMode? 0: (minuteWheelPos + 128) % 256;
 
   int lightPos;
 
   for(int minutePos = 0; minutePos < 12; minutePos++ ){
     lightPos = minutePos;
     if(leftUnaryIsLit(showMinutes, minutePos)){
-      pixels.setPixelColor(lightPos, Wheel(minuteWheelPos)); //GRB
+      pixels.setPixelColor(lightPos, scale(Wheel(minuteWheelPos), brightness)); //GRB
     }
     else{
       pixels.setPixelColor(lightPos, pixels.Color(0,0,0)); //GRB      
@@ -361,8 +367,8 @@ void shiftLights(int showHours, int showMinutes){
 
   for(int hourPos = 0; hourPos < 12; hourPos++){
     lightPos = hourPos + 12;
-    if(distinctNumberIsLit(showHours, hourPos)){
-      pixels.setPixelColor(lightPos, Wheel(hourWheelPos)); //GRB
+    if(distinctNumberIsLit(showHours, hourPos)){      
+      pixels.setPixelColor(lightPos, scale(Wheel(hourWheelPos), brightness)); //GRB
     }
     else{
       pixels.setPixelColor(lightPos, pixels.Color(0,0,0)); //GRB      
@@ -397,3 +403,10 @@ uint8_t blue(uint32_t c) {
   return (c);
 }
 
+uint32_t scale(uint32_t color, int brightness) {
+  return pixels.Color(
+    (brightness * red(color)) / 256,
+    (brightness * green(color)) / 256,
+    (brightness * blue(color)) / 256
+  );
+}

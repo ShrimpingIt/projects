@@ -57,17 +57,17 @@ const int dataPin = A3;
 //an easily distinguishable number of LED lights
 int distinctNumbers[] = {
   0b000000000000, //0
-  0b000000100000, //1
-  0b100000000001, //2
+  0b100000000000, //1
+  0b100000100000, //2
   0b100010001000, //3
-  0b001001001001, //4
-  0b011000100011, //5
-  0b000000111111, //6
-  0b100000111111, //7
-  0b011011011011, //8
-  0b011101110111, //9
+  0b100100100100, //4
+  0b110001000110, //5
+  0b111111000000, //6
+  0b111001001110, //7
+  0b110110110110, //8
+  0b111011101110, //9
   0b101111111101, //10
-  0b111111011111, //11
+  0b111111111101, //11
   0b111111111111  //12
 };
 
@@ -77,16 +77,16 @@ int distinctNumbers[] = {
 //negative number from -1 to -12 is a minutes indicator light
 //zero means do not use
 int assignments[] ={
-   -7, -8, 0, -9,-10, 0,-11,-12,
-    1,  2, 0,  3,  4, 0,  5,  6,
+   7,  8, 0,  9, 10, 0, 11, 12,
    -1, -2, 0, -3, -4, 0, -5, -6,
-   7,  8, 0,  9, 10, 0, 11, 12
+    1,  2, 0,  3,  4, 0,  5,  6,
+   -7, -8, 0, -9,-10, 0,-11,-12
 };
 
 int brightness = 255;
 
 int alarmHour = 9;
-int alarmMinute = 35;
+int alarmMinute = 00;
 
 void setup(){
   Serial.begin(SERIAL_RATE);
@@ -180,6 +180,8 @@ void printDateTimeVerbose(){
     Serial.print(now.hour() % 12 == 0 ? 12 : now.hour() % 12, DEC);
     Serial.print(" ");
     Serial.print(now.minute(), DEC);
+    Serial.print(" ");
+    Serial.print(now.second(), DEC);
     Serial.print(now.hour() != (now.hour() % 12) ? " pm ": " am ");
     
     Serial.print(" on ");
@@ -295,7 +297,7 @@ void showTime(int newHours, int newMins){
 */
 boolean distinctNumberIsLit(int numLights, int pos){
   //inspects an individual bit to se if this hour LED should be lit
-  return (distinctNumbers[numLights] & (1 << pos)) != 0;  
+  return (distinctNumbers[numLights] & (1 << (11 - pos))) != 0;  
 }
 
 boolean rightUnaryIsLit(int numLights, int pos){
